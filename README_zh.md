@@ -24,9 +24,10 @@
 
 ```
 /plugin marketplace add theohsiung/at2_skills
+/plugin install at2-skills@at2-skills
 ```
 
-選擇 `at2-skills` 即可安裝兩個 skill。
+第一行註冊 marketplace，第二行安裝兩個 skill。安裝後 skill 名稱為 `at2-skills:daily-note` 和 `at2-skills:weekly-report`。
 
 ### 方法二：手動安裝
 

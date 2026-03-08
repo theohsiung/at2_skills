@@ -26,9 +26,10 @@ In Claude Code, run:
 
 ```
 /plugin marketplace add theohsiung/at2_skills
+/plugin install at2-skills@at2-skills
 ```
 
-Then select `at2-skills` to install both skills.
+The first command registers the marketplace, the second installs both skills. After installation, the skills appear as `at2-skills:daily-note` and `at2-skills:weekly-report`.
 
 ### Method 2: Manual Skill Registration
 
