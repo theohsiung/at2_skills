@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.env
+reports-config.json
+.evals/
+.at2-skills-workspace/

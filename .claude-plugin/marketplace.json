@@ -1,0 +1,23 @@
+{
+  "name": "at2-skills",
+  "owner": {
+    "name": "AT2 Team",
+    "email": ""
+  },
+  "metadata": {
+    "description": "Daily note-taking and weekly report generation skills for Claude",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "at2-skills",
+      "description": "Daily notes and weekly report generation from git commits, Claude conversation history, and user input",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/daily-note",
+        "./skills/weekly-report"
+      ]
+    }
+  ]
+}

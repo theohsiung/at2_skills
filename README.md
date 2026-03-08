@@ -1,93 +1,112 @@
-# AT2_SKILLS
+# AT2 Skills
 
+Claude Code skills for daily note-taking and weekly report generation.
 
+## Skills
 
-## Getting started
+### daily-note
+Quickly capture notes, meeting summaries, ideas, or any context into dated markdown files. Each day gets one file; multiple notes in the same day are appended as timestamped sections.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### weekly-report
+Generate daily work summaries and weekly reports by aggregating:
+- Git commits (auto-scanned across multiple repos)
+- Claude conversation history (parsed from `~/.claude/projects/` JSONL files)
+- Daily notes (from the `daily-note` skill)
+- User-provided context (meetings, blockers, plans)
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.deltaww.com/cto_office/advtech/cto_at2/llm-tpe/at2_skills.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.deltaww.com/cto_office/advtech/cto_at2/llm-tpe/at2_skills/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+Supports a flexible workflow: run daily summaries whenever you want, and generate a weekly roll-up on demand. Missing days are auto-filled from git and conversation data.
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+
+### Claude Code (Plugin)
+```bash
+/plugin marketplace add <repo-url>
+```
+
+Then select `at2-skills` to install both skills.
+
+### Manual
+Clone this repo and register the skills folder in your Claude Code settings.
+
+## Configuration
+
+Both skills share a `reports-config.json` file (optional — skills work without it). On first use, the skill asks for basic settings and offers to save them.
+
+Config is **not required** — you can provide all settings in conversation each time. Anything you say in conversation overrides the config file.
+
+### Single team
+
+```json
+{
+  "report_dir": "~/reports",
+  "repo_paths": ["/path/to/repo1", "/path/to/repo2"],
+  "author_email": "you@example.com",
+  "language": "zh-TW",
+  "team_name": "My Team",
+  "team_members": ["Alice", "Bob"],
+  "report_author": "Your Name"
+}
+```
+
+### Multiple teams (profiles)
+
+```json
+{
+  "report_dir": "~/reports",
+  "author_email": "you@example.com",
+  "language": "zh-TW",
+  "default_profile": "team-a",
+  "profiles": {
+    "team-a": {
+      "repo_paths": ["/path/to/repo1"],
+      "team_name": "Team A",
+      "team_members": ["Alice", "Bob"]
+    },
+    "team-b": {
+      "repo_paths": ["/path/to/repo2"],
+      "team_name": "Team B",
+      "team_members": ["Charlie", "Dave"]
+    }
+  }
+}
+```
+
+Switch profiles in conversation: `"用 team-b 的設定產生週報"`
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+```
+# Take a note
+"record this: met with Leo about orchestrator design, decided on event-driven approach"
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+# Generate daily summary
+"daily summary"
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+# Generate weekly report
+"weekly report"
+```
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## Output Structure
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+```
+{report_dir}/
+  notes/
+    2026-03-03.md
+    2026-03-06.md
+  week12/
+    2026-03-03/
+      summary.md
+    2026-03-06/
+      summary.md
+    weekly_report.md
+```
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## Requirements
+
+- Claude Code
+- Python 3.10+ (for conversation history extraction script)
+- Git (for commit scanning)
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Apache 2.0 — see [LICENSE](LICENSE).
